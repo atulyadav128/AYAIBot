@@ -1,0 +1,14 @@
+# Ignore Python cache & virtual environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+rag_env/
+
+# Ignore FAISS index
+faiss_index/
+
+# Ignore local database (if using ChromaDB)
+db/

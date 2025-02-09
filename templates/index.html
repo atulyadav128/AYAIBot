@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI PDF Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+        }
+        #chatbox {
+            height: 400px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .user, .bot {
+            margin: 5px;
+            padding: 8px;
+            border-radius: 5px;
+            display: block;
+        }
+        .user {
+            background-color: #d1e7fd;
+            text-align: right;
+        }
+        .bot {
+            background-color: #f1f1f1;
+            text-align: left;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>AI PDF Chatbot</h2>
+    <div id="chatbox"></div>
+
+    <input type="text" id="userInput" placeholder="Ask a question...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        async function sendMessage() {
+            let input = document.getElementById("userInput").value;
+            if (!input) return;
+
+            let chatbox = document.getElementById("chatbox");
+
+            // Display User Message
+            let userMessage = document.createElement("div");
+            userMessage.className = "user";
+            userMessage.textContent = input;
+            chatbox.appendChild(userMessage);
+
+            // Clear Input Field
+            document.getElementById("userInput").value = "";
+
+            // Call API
+            try {
+                let response = await fetch("http://localhost:8000/ask", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ query: input })
+                });
+
+                let data = await response.json();
+                let botResponse = data.answer || "Error: No response.";
+
+                // Display Bot Response
+                let botMessage = document.createElement("div");
+                botMessage.className = "bot";
+                botMessage.textContent = botResponse;
+                chatbox.appendChild(botMessage);
+
+                // Scroll to Bottom
+                chatbox.scrollTop = chatbox.scrollHeight;
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+    </script>
+
+</body>
+</html>
